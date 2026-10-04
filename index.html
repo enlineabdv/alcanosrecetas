@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALCANOS · Recetas gratuitas y premium</title>
+<meta name="description" content="Recetas claras con cantidades exactas y pasos ordenados. Recetas gratuitas completas y recetas premium con precio visible.">
+<style>
+  :root{
+    --crema:#FBF6EE; --tinta:#2A2320; --suave:#6B5F57; --terracota:#B5562F;
+    --terracota-osc:#8E3F1F; --oliva:#5B6B3A; --borde:#E8DDCC; --blanco:#fff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--crema);color:var(--tinta);line-height:1.6}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .5rem}
+  a{color:var(--terracota-osc)}
+  img,svg{max-width:100%;display:block}
+  .contenedor{max-width:1100px;margin:0 auto;padding:0 16px}
+  .btn{display:inline-block;border:0;border-radius:999px;padding:.7rem 1.3rem;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;text-align:center}
+  .btn-principal{background:var(--terracota);color:#fff}
+  .btn-principal:hover{background:var(--terracota-osc)}
+  .btn-borde{background:transparent;color:var(--tinta);border:2px solid var(--tinta)}
+  :focus-visible{outline:3px solid var(--oliva);outline-offset:2px}
+  .marcador{background:#FFF1B8;border:1px dashed #B58900;padding:0 .3em;border-radius:4px;font-size:.95em}
+
+  /* Encabezado */
+  header{position:sticky;top:0;z-index:20;background:rgba(251,246,238,.95);border-bottom:1px solid var(--borde);backdrop-filter:blur(6px)}
+  .barra{display:flex;align-items:center;gap:1rem;height:64px}
+  .logo{font-family:Georgia,serif;font-weight:700;font-size:1.5rem;letter-spacing:.08em;text-decoration:none;color:var(--tinta)}
+  .logo span{color:var(--terracota)}
+  nav{margin-left:auto}
+  nav a{margin-left:1.2rem;text-decoration:none;color:var(--tinta);font-weight:500}
+  nav a:hover{color:var(--terracota)}
+  .pse{font-size:.75rem;border:1px solid var(--borde);background:#fff;border-radius:8px;padding:.25rem .6rem;line-height:1.2;text-align:center;display:flex;flex-direction:column;align-items:center}
+  .pse img{height:30px;width:auto}
+  .pse small{display:block;color:var(--suave)}
+  .btn-carrito{position:relative;display:flex;align-items:center;background:#fff;border:1px solid var(--borde);border-radius:999px;padding:.35rem .7rem;cursor:pointer}
+  .btn-carrito img{width:30px;height:30px}
+  .btn-carrito:hover{border-color:var(--terracota)}
+  .contador{background:var(--terracota);color:#fff;font-weight:700;border-radius:999px;padding:0 .45rem;margin-left:.3rem;font-size:.85rem}
+  @media (max-width:760px){ nav{display:none} .barra{justify-content:space-between} .pse{margin-left:auto} }
+
+  /* Hero */
+  .hero{padding:4rem 0 3rem;text-align:center}
+  .hero h1{font-size:clamp(2.8rem,9vw,5rem);letter-spacing:.12em;color:var(--terracota)}
+  .hero p{max-width:620px;margin:0 auto 1.5rem;font-size:1.15rem;color:var(--suave)}
+  .hero .acciones{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+
+  /* Secciones */
+  section{padding:3rem 0}
+  .titulo-seccion{margin-bottom:1.5rem}
+  .titulo-seccion h2{font-size:clamp(1.7rem,4vw,2.3rem)}
+  .titulo-seccion p{color:var(--suave);margin:0;max-width:640px}
+  .alterna{background:#F3EADB}
+
+  /* Carrusel */
+  .carrusel{position:relative}
+  .pista{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:.5rem;scrollbar-width:thin}
+  .diapositiva{flex:0 0 85%;scroll-snap-align:start;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--borde)}
+  @media (min-width:700px){ .diapositiva{flex-basis:calc(50% - 8px)} }
+  @media (min-width:1000px){ .diapositiva{flex-basis:calc(33.333% - 11px)} }
+  .diapositiva div{padding:.8rem 1rem}
+  .controles{display:flex;justify-content:center;gap:.6rem;margin-top:1rem}
+  .controles button{width:44px;height:44px;border-radius:50%;border:2px solid var(--tinta);background:#fff;font-size:1.2rem;cursor:pointer}
+
+  /* Tarjetas */
+  .rejilla{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  .tarjeta{background:#fff;border:1px solid var(--borde);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .tarjeta .cuerpo{padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+  .tarjeta p{margin:0;color:var(--suave);font-size:.95rem}
+  .etiquetas{display:flex;gap:.4rem;flex-wrap:wrap}
+  .insignia{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.15rem .6rem;border-radius:999px}
+  .gratis{background:#E4EDD5;color:#3E5223}
+  .premium{background:#2A2320;color:#F3D28B}
+  .categoria{font-size:.8rem;color:var(--suave);padding:.15rem .2rem}
+  .tarjeta .btn{margin-top:auto}
+  .precio{font-size:1.4rem;font-weight:700;color:var(--tinta)!important}
+  .aviso{background:#fff;border-left:4px solid var(--terracota);padding:.8rem 1rem;border-radius:8px;margin-bottom:1.5rem}
+
+  /* Información */
+  .puntos{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .punto{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:1.2rem}
+  .punto p{margin:0;color:var(--suave)}
+  details{background:#fff;border:1px solid var(--borde);border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+  summary{cursor:pointer;font-weight:600}
+
+  /* Pie */
+  footer{background:var(--tinta);color:#E9E1D6;padding:2.5rem 0 6rem;font-size:.92rem}
+  footer a{color:#F3D28B}
+  footer .marcador{color:var(--tinta)}
+  .columnas{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  footer h3{font-size:1rem;color:#fff}
+  footer ul{list-style:none;padding:0;margin:0}
+  footer li{margin:.3rem 0}
+  .legal{border-top:1px solid #4A403A;margin-top:2rem;padding-top:1rem;color:#BFB4A7}
+  .legal details{background:#352D29;border-color:#4A403A;color:#E9E1D6}
+
+  /* Carrito */
+  .fondo{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.2s;z-index:30}
+  .fondo.abierto{opacity:1;pointer-events:auto}
+  .carrito{position:fixed;top:0;right:0;height:100%;width:min(400px,100%);background:#fff;z-index:31;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column}
+  .carrito.abierto{transform:none}
+  .carrito-cab{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid var(--borde)}
+  .carrito-cab button{background:none;border:0;font-size:1.6rem;cursor:pointer}
+  .items{list-style:none;margin:0;padding:1rem;overflow-y:auto;flex:1}
+  .item{display:grid;grid-template-columns:64px 1fr auto;gap:.8rem;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--borde)}
+  .item .mini{width:64px;border-radius:8px;overflow:hidden}
+  .item small{color:var(--suave)}
+  .item button{background:none;border:0;color:var(--terracota-osc);cursor:pointer;text-decoration:underline;font:inherit;font-size:.85rem}
+  .carrito-pie{padding:1rem;border-top:1px solid var(--borde)}
+  .total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:700;margin-bottom:.6rem}
+  .nota{font-size:.85rem;color:var(--suave);margin:0}
+
+  /* Receta (ventana) */
+  dialog{border:0;border-radius:16px;padding:0;width:min(720px,94vw);max-height:90vh}
+  dialog::backdrop{background:rgba(0,0,0,.5)}
+  .receta{padding:1.4rem}
+  .receta ol,.receta ul{padding-left:1.3rem}
+  .receta li{margin:.3rem 0}
+  .cerrar{position:sticky;top:0;float:right;margin:.6rem;background:#fff;border:1px solid var(--borde);border-radius:50%;width:40px;height:40px;font-size:1.3rem;cursor:pointer}
+
+  /* WhatsApp */
+  .whatsapp{position:fixed;right:16px;bottom:16px;z-index:25;width:60px;height:60px;border-radius:50%;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:transform .15s}
+  .whatsapp:hover{transform:scale(1.07)}
+  .whatsapp img{width:100%;height:100%;object-fit:cover}
+  .mensaje{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:.6rem 1rem;border-radius:8px;opacity:0;transition:.2s;pointer-events:none;z-index:40;max-width:90vw;text-align:center}
+  .mensaje.visible{opacity:1}
+  .oculto-visual{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  @media (prefers-reduced-motion:reduce){ *{scroll-behavior:auto!important;transition:none!important} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="contenedor barra">
+    <a class="logo" href="#">ALCA<span>NOS</span></a>
+    <nav aria-label="Principal">
+      <a href="#gratis">Recetas gratuitas</a>
+      <a href="#premium">Premium</a>
+      <a href="#nosotros">Sobre ALCANOS</a>
+    </nav>
+    <div class="pse" title="El pago con PSE aún no está disponible">
+      <img src="https://i.ibb.co/mCfdn663/logo-pse.png" alt="Pago con PSE">
+      <small>próximamente</small>
+    </div>
+    <button class="btn-carrito" id="abrirCarrito" aria-controls="carrito" aria-label="Abrir carrito">
+      <img src="https://i.ibb.co/LXnMnB4w/107831.png" alt="">
+      <span class="contador" id="contador">0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="contenedor">
+      <h1>ALCANOS</h1>
+      <p>Recetas para cocinar en casa, con cantidades exactas y pasos ordenados. Recetas gratuitas completas y recetas premium con su precio visible desde el inicio.</p>
+      <div class="acciones">
+        <a class="btn btn-principal" href="#gratis">Explorar recetas</a>
+        <a class="btn btn-borde" href="#premium">Ver recetas premium</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARRUSEL -->
+  <section aria-labelledby="t-carrusel">
+    <div class="contenedor">
+      <div class="titulo-seccion">
+        <h2 id="t-carrusel">Lo que puedes cocinar</h2>
+        <p>Un recorrido por las recetas de ALCANOS.</p>
+      </div>
+      <div class="carrusel">
+        <div class="pista" id="pista" tabindex="0" aria-label="Recetas destacadas"></div>
+        <div class="controles">
+          <button id="anterior" aria-label="Anterior">‹</button>
+          <button id="siguiente" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRATUITAS -->
+  <section id="gratis" aria-labelledby="t-gratis">
+    <div class="contenedor">
+      <div class="titulo-seccion">
+        <h2 id="t-gratis">Recetas gratuitas</h2>
+        <p>Completas y sin registro: ingredientes, pasos y consejos.</p>
+      </div>
+      <div class="rejilla" id="listaGratis"></div>
+    </div>
+  </section>
+
+  <!-- PREMIUM -->
+  <section id="premium" class="alterna" aria-labelledby="t-premium">
+    <div class="contenedor">
+      <div class="titulo-seccion">
+        <h2 id="t-premium">Recetas premium</h2>
+        <p>Preparaciones más elaboradas con guías detalladas. El precio se muestra antes de añadirlas al carrito.</p>
+      </div>
+      <p class="aviso"><strong>Importante:</strong> el pago en línea todavía no está habilitado. El carrito solo guarda tu selección; no se realiza ningún cobro.</p>
+      <div class="rejilla" id="listaPremium"></div>
+    </div>
+  </section>
+
+  <!-- SOBRE ALCANOS -->
+  <section id="nosotros" aria-labelledby="t-nosotros">
+    <div class="contenedor">
+      <div class="titulo-seccion">
+        <h2 id="t-nosotros">Sobre ALCANOS</h2>
+        <p>ALCANOS es un recetario en línea pensado para la cocina de casa. Escribimos cada receta para que puedas seguirla de principio a fin.</p>
+      </div>
+      <div class="puntos">
+        <div class="punto"><h3>Cantidades exactas</h3><p>Medidas claras en tazas, cucharadas, gramos o mililitros.</p></div>
+        <div class="punto"><h3>Pasos en orden</h3><p>Cada paso explica qué hacer y cómo saber que está listo.</p></div>
+        <div class="punto"><h3>Gratis y premium</h3><p>Recetas abiertas para todos y recetas premium con precio visible.</p></div>
+      </div>
+      <details>
+        <summary>¿Necesito registrarme para ver las recetas gratuitas?</summary>
+        <p>No. Están completas y abiertas para cualquier persona.</p>
+      </details>
+      <details>
+        <summary>¿Puedo comprar ya las recetas premium?</summary>
+        <p>Todavía no. El pago en línea aún no está habilitado; el carrito solo guarda tu selección en este navegador.</p>
+      </details>
+      <details>
+        <summary>¿Qué es PSE?</summary>
+        <p>PSE permite pagar en línea desde cuentas bancarias en Colombia. ALCANOS planea ofrecerlo cuando habilite las compras. ALCANOS no está afiliado a PSE.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer>
+  <div class="contenedor">
+    <div class="columnas">
+      <div>
+        <h3>ALCANOS</h3>
+        <p>Recetas para cocinar en casa, con textos e ilustraciones propios.</p>
+      </div>
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li>Correo: <a href="mailto:recetasonline@alcanorecetas.com">recetasonline@alcanorecetas.com</a></li>
+          <li>Ciudad: Bogotá D.C., Colombia</li>
+          <li>Responsable: Recetas ALCANOS</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Información</h3>
+        <ul>
+          <li><a href="#privacidad">Política de privacidad</a></li>
+          <li><a href="#terminos">Términos y condiciones</a></li>
+          <li><a href="#compras">Compras y reembolsos</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="legal">
+      <details id="privacidad">
+        <summary>Política de privacidad</summary>
+        <p>Este sitio no tiene formularios ni cuentas de usuario y no usa cookies de analítica ni de publicidad. El carrito se guarda solo en el almacenamiento local de tu navegador y no se envía a ALCANOS. Si nos escribes por correo o WhatsApp, usaremos tus datos únicamente para responderte. Puedes ejercer tus derechos de conocer, actualizar, rectificar o suprimir tus datos (Ley 1581 de 2012) escribiendo a <a href="mailto:recetasonline@alcanorecetas.com">recetasonline@alcanorecetas.com</a>.</p>
+      </details>
+      <details id="terminos">
+        <summary>Términos y condiciones</summary>
+        <p>Las recetas gratuitas pueden usarse libremente para uso personal. Los textos, recetas e ilustraciones son propios de ALCANOS y no pueden reproducirse con fines comerciales sin autorización. Los tiempos de cocción pueden variar; revisa los ingredientes si tienes alergias. Responsable: Recetas ALCANOS.</p>
+      </details>
+      <details id="compras">
+        <summary>Compras y reembolsos</summary>
+        <p>El pago en línea aún no está habilitado y no se realiza ningún cobro. Cuando se habilite, los precios se mostrarán en pesos colombianos (COP) y las compras se regirán por la Ley 1480 de 2011 (Estatuto del Consumidor). Condiciones de entrega y reembolso: <span class="marcador">[POR DEFINIR]</span>.</p>
+      </details>
+      <p>© <span id="anio"></span> ALCANOS.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- CARRITO -->
+<div class="fondo" id="fondo"></div>
+<aside class="carrito" id="carrito" role="dialog" aria-modal="true" aria-labelledby="t-carrito" aria-hidden="true">
+  <div class="carrito-cab">
+    <h2 id="t-carrito">Tu carrito</h2>
+    <button id="cerrarCarrito" aria-label="Cerrar carrito">×</button>
+  </div>
+  <ul class="items" id="items"></ul>
+  <div class="carrito-pie">
+    <div class="total"><span>Total</span><span id="total">$ 0</span></div>
+    <p class="nota"><strong>El pago en línea todavía no está habilitado.</strong> Tu selección se guarda solo en este navegador y no genera ningún cobro.</p>
+  </div>
+</aside>
+
+<!-- VENTANA DE RECETA -->
+<dialog id="ventana" aria-labelledby="t-receta">
+  <button class="cerrar" id="cerrarVentana" aria-label="Cerrar receta">×</button>
+  <div class="receta" id="contenidoReceta"></div>
+</dialog>
+
+<!-- WHATSAPP -->
+<a class="whatsapp" id="whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><img src="https://i.ibb.co/YT1cJtb9/whatsapp-logo-icon.png" alt="WhatsApp"></a>
+<div class="mensaje" id="mensaje" role="status" aria-live="polite"></div>
+
+<script>
+// =====================================================
+// CONFIGURACIÓN: escribe aquí el número real de WhatsApp
+// Formato: código de país + número, solo dígitos. Ej: 573001234567
+// =====================================================
+const WHATSAPP_NUMERO = '';
+
+// ---------- Recetas (texto propio de ALCANOS) ----------
+const gratis = [
+  {
+    id:'arepas', nombre:'Arepas de queso', categoria:'Desayunos',
+    descripcion:'Arepas de maíz con queso en la masa, doradas por fuera y suaves por dentro.',
+    color:{fondo:'#8FA382', comida:'#E5B160', extra:['#FFF5D6','#C98B3D','#F6D894']},
+    tiempo:'35 min', rinde:'6 arepas',
+    ingredientes:['2 tazas (250 g) de harina de maíz blanco precocida','2 tazas (480 ml) de agua tibia','1 cucharadita de sal','1 cucharada de mantequilla derretida','1 taza (100 g) de queso blanco rallado','Mantequilla o aceite para la plancha'],
+    pasos:['Mezcla el agua tibia con la sal y la mantequilla derretida.','Agrega la harina poco a poco mientras mezclas, para evitar grumos.','Incorpora el queso y amasa 2 a 3 minutos hasta tener una masa suave que no se pegue. Si se agrieta, añade un poco de agua.','Tapa la masa y déjala reposar 5 minutos.','Forma 6 bolas y aplánalas hasta 1,5 cm de grosor. Alisa los bordes con los dedos húmedos.','Cocina en una plancha engrasada a fuego medio, 6 a 8 minutos por lado, hasta que estén doradas.','Sírvelas calientes con mantequilla o más queso.']
+  },
+  {
+    id:'crema', nombre:'Crema de ahuyama con jengibre', categoria:'Sopas',
+    descripcion:'Crema sedosa y de color intenso, con un toque fresco de jengibre.',
+    color:{fondo:'#2F4A3A', comida:'#E68A28', extra:['#FFF8EC','#8BA352','#F7B04B']},
+    tiempo:'45 min', rinde:'4 porciones',
+    ingredientes:['800 g de ahuyama pelada en cubos','1 papa mediana en cubos','1 cebolla blanca picada','2 dientes de ajo','1 cucharada de jengibre rallado','1 litro de caldo de verduras o agua','2 cucharadas de aceite','½ taza de crema de leche (opcional)','Sal y pimienta'],
+    pasos:['Sofríe la cebolla en el aceite 5 minutos, a fuego medio.','Añade ajo y jengibre y cocina 1 minuto.','Agrega la ahuyama, la papa y el caldo.','Cocina tapado 20 a 25 minutos, hasta que la ahuyama esté muy blanda.','Licúa hasta que quede lisa (con cuidado: el vapor puede levantar la tapa).','Devuelve a la olla, añade la crema, sal y pimienta, y calienta sin hervir.']
+  },
+  {
+    id:'pasta', nombre:'Pasta con tomate asado', categoria:'Platos fuertes',
+    descripcion:'Tomates, cebolla y ajo asados al horno para una salsa rústica y profunda.',
+    color:{fondo:'#B5562F', comida:'#C8442E', extra:['#EBC56A','#3F7D3A','#F8EDC6']},
+    tiempo:'50 min', rinde:'4 porciones',
+    ingredientes:['400 g de pasta corta','1 kg de tomates maduros','1 cabeza de ajo','1 cebolla roja en cuartos','4 cucharadas de aceite de oliva','Albahaca fresca','Queso rallado','Sal y pimienta'],
+    pasos:['Precalienta el horno a 200 °C.','Pon en una bandeja los tomates partidos, la cebolla y la cabeza de ajo con la punta cortada. Rocía aceite, sal y pimienta.','Asa 30 a 35 minutos, hasta que los tomates estén blandos y dorados en los bordes.','Cocina la pasta al dente y reserva 1 taza del agua de cocción.','Saca los ajos de su piel y machaca todo hasta tener una salsa rústica.','Mezcla la pasta con la salsa a fuego bajo, añadiendo agua de cocción hasta que brille.','Sirve con albahaca y queso.']
+  },
+  {
+    id:'arroz', nombre:'Arroz con leche', categoria:'Postres',
+    descripcion:'Postre casero con canela y un toque de limón, de textura cremosa.',
+    color:{fondo:'#5B6B3A', comida:'#F6EBD3', extra:['#8A4B22','#4A2A2E','#FFFBF0']},
+    tiempo:'50 min', rinde:'6 porciones',
+    ingredientes:['1 taza (200 g) de arroz','2 tazas de agua','1 astilla de canela','Cáscara de ½ limón','1 litro de leche entera','¾ de taza (150 g) de azúcar','1 pizca de sal','Canela en polvo'],
+    pasos:['Cocina el arroz con el agua, la canela y la cáscara de limón unos 15 minutos, hasta que el agua casi se absorba.','Retira la cáscara y agrega la leche poco a poco a fuego bajo.','Cocina 20 a 25 minutos revolviendo con frecuencia para que no se pegue.','Añade el azúcar y la sal y cocina 5 minutos más.','Retíralo un poco más líquido de lo deseado: espesa al enfriar.','Sirve con canela en polvo.']
+  }
+];
+
+// Los precios son de EJEMPLO: cámbialos por los reales.
+const premium = [
+  { id:'costillas', nombre:'Costillas glaseadas con panela', categoria:'Platos fuertes', precio:14900,
+    descripcion:'Costillas al horno con un glaseado agridulce de panela y tamarindo. Incluye lista de compras y tiempos de horno.',
+    color:{fondo:'#2A2320', comida:'#7A2E15', extra:['#F1E6CF','#9A4220','#CFE6A8']} },
+  { id:'salmon', nombre:'Bowl de salmón y mango', categoria:'Pescados', precio:12900,
+    descripcion:'Arroz sazonado, salmón marinado, mango y aguacate, con salsa de ají dulce paso a paso.',
+    color:{fondo:'#EFE6D6', comida:'#F7F3EA', extra:['#F08A5D','#F6B93B','#7DB44A']} },
+  { id:'torta', nombre:'Torta de chocolate y café', categoria:'Repostería', precio:12900,
+    descripcion:'Torta húmeda con ganache. Incluye medidas en gramos y tabla para distintos moldes.',
+    color:{fondo:'#D9C6A5', comida:'#341C12', extra:['#6B4227','#53301F','#3F8A4A']} }
+];
+
+// ---------- Ilustraciones simples (SVG propio) ----------
+function ilustracion(r, etiqueta){
+  let puntos = '';
+  for(let i=0;i<14;i++){
+    const ang = i*2.4, dist = 12 + (i*13)%50;
+    const x = 200 + Math.cos(ang)*dist, y = 150 + Math.sin(ang)*dist;
+    puntos += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${6+(i%3)*4}" fill="${r.color.extra[i%3]}"/>`;
+  }
+  return `<svg viewBox="0 0 400 300" role="img" aria-label="${etiqueta}">
+    <rect width="400" height="300" fill="${r.color.fondo}"/>
+    <circle cx="208" cy="160" r="112" fill="#000" opacity=".15"/>
+    <circle cx="200" cy="150" r="112" fill="#FBF8F2"/>
+    <circle cx="200" cy="150" r="86" fill="#F1EBE0"/>
+    <circle cx="200" cy="150" r="68" fill="${r.color.comida}"/>
+    ${puntos}
+  </svg>`;
+}
+
+const pesos = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n);
+
+// ---------- Pintar tarjetas ----------
+document.getElementById('listaGratis').innerHTML = gratis.map(r => `
+  <article class="tarjeta">
+    ${ilustracion(r, 'Ilustración de ' + r.nombre)}
+    <div class="cuerpo">
+      <div class="etiquetas"><span class="insignia gratis">Gratis</span><span class="categoria">${r.categoria}</span></div>
+      <h3>${r.nombre}</h3>
+      <p>${r.descripcion}</p>
+      <p>⏱ ${r.tiempo} · ${r.rinde}</p>
+      <button class="btn btn-principal" data-ver="${r.id}">Ver receta</button>
+    </div>
+  </article>`).join('');
+
+document.getElementById('listaPremium').innerHTML = premium.map(r => `
+  <article class="tarjeta">
+    ${ilustracion(r, 'Ilustración de ' + r.nombre)}
+    <div class="cuerpo">
+      <div class="etiquetas"><span class="insignia premium">Premium</span><span class="categoria">${r.categoria}</span></div>
+      <h3>${r.nombre}</h3>
+      <p>${r.descripcion}</p>
+      <p class="precio">${pesos(r.precio)} COP</p>
+      <button class="btn btn-principal" data-anadir="${r.id}">Añadir al carrito</button>
+    </div>
+  </article>`).join('');
+
+// ---------- Carrusel ----------
+const pista = document.getElementById('pista');
+pista.innerHTML = [...gratis.map(r=>({...r,tipo:'Gratis'})), ...premium.map(r=>({...r,tipo:'Premium'}))].map(r => `
+  <div class="diapositiva">
+    ${ilustracion(r, 'Ilustración de ' + r.nombre)}
+    <div><span class="insignia ${r.tipo==='Gratis'?'gratis':'premium'}">${r.tipo}</span> <strong>${r.nombre}</strong></div>
+  </div>`).join('');
+const paso = () => pista.querySelector('.diapositiva').offsetWidth + 16;
+document.getElementById('anterior').onclick = () => pista.scrollBy({left:-paso()});
+document.getElementById('siguiente').onclick = () => pista.scrollBy({left:paso()});
+
+// ---------- Ver receta gratuita ----------
+const ventana = document.getElementById('ventana');
+document.getElementById('listaGratis').addEventListener('click', e => {
+  const id = e.target.dataset.ver; if(!id) return;
+  const r = gratis.find(x => x.id === id);
+  document.getElementById('contenidoReceta').innerHTML = `
+    <span class="insignia gratis">Gratis</span>
+    <h2 id="t-receta">${r.nombre}</h2>
+    <p>${r.descripcion}</p>
+    <p><strong>Tiempo:</strong> ${r.tiempo} · <strong>Rinde:</strong> ${r.rinde}</p>
+    <h3>Ingredientes</h3><ul>${r.ingredientes.map(i=>`<li>${i}</li>`).join('')}</ul>
+    <h3>Preparación</h3><ol>${r.pasos.map(p=>`<li>${p}</li>`).join('')}</ol>
+    <p><small>Los tiempos pueden variar según tu estufa u horno. Si tienes alergias, revisa los ingredientes.</small></p>`;
+  ventana.showModal();
+});
+document.getElementById('cerrarVentana').onclick = () => ventana.close();
+ventana.addEventListener('click', e => { if(e.target === ventana) ventana.close(); });
+
+// ---------- Carrito ----------
+let carrito = [];
+try { carrito = JSON.parse(localStorage.getItem('alcanos-carrito')) || []; } catch(e) {}
+carrito = carrito.filter(id => premium.some(p => p.id === id));
+const guardar = () => { try { localStorage.setItem('alcanos-carrito', JSON.stringify(carrito)); } catch(e) {} };
+
+function pintarCarrito(){
+  const items = document.getElementById('items');
+  const elegidos = carrito.map(id => premium.find(p => p.id === id));
+  items.innerHTML = elegidos.length ? elegidos.map(p => `
+    <li class="item">
+      <div class="mini">${ilustracion(p, '')}</div>
+      <div><strong>${p.nombre}</strong><br><small>Cantidad: 1 · ${pesos(p.precio)}</small></div>
+      <button data-quitar="${p.id}">Eliminar</button>
+    </li>`).join('') : '<li>Tu carrito está vacío.</li>';
+  document.getElementById('total').textContent = pesos(elegidos.reduce((s,p)=>s+p.precio,0));
+  document.getElementById('contador').textContent = carrito.length;
+  document.querySelectorAll('[data-anadir]').forEach(b => {
+    const dentro = carrito.includes(b.dataset.anadir);
+    b.textContent = dentro ? 'En el carrito ✓' : 'Añadir al carrito';
+    b.disabled = dentro;
+  });
+}
+
+document.getElementById('listaPremium').addEventListener('click', e => {
+  const id = e.target.dataset.anadir; if(!id || carrito.includes(id)) return;
+  carrito.push(id); guardar(); pintarCarrito(); avisar('Receta añadida al carrito');
+});
+document.getElementById('items').addEventListener('click', e => {
+  const id = e.target.dataset.quitar; if(!id) return;
+  carrito = carrito.filter(x => x !== id); guardar(); pintarCarrito();
+});
+
+const panel = document.getElementById('carrito'), fondo = document.getElementById('fondo');
+function abrir(){ panel.classList.add('abierto'); fondo.classList.add('abierto'); panel.setAttribute('aria-hidden','false'); document.getElementById('cerrarCarrito').focus(); }
+function cerrar(){ panel.classList.remove('abierto'); fondo.classList.remove('abierto'); panel.setAttribute('aria-hidden','true'); }
+document.getElementById('abrirCarrito').onclick = abrir;
+document.getElementById('cerrarCarrito').onclick = cerrar;
+fondo.onclick = cerrar;
+document.addEventListener('keydown', e => { if(e.key === 'Escape') cerrar(); });
+
+// ---------- WhatsApp ----------
+const wa = document.getElementById('whatsapp');
+if (WHATSAPP_NUMERO) {
+  wa.href = 'https://wa.me/' + WHATSAPP_NUMERO + '?text=' + encodeURIComponent('Hola, ALCANOS. Tengo una pregunta sobre sus recetas.');
+  wa.setAttribute('aria-label','Escribir por WhatsApp (se abre en una pestaña nueva)');
+} else {
+  wa.addEventListener('click', e => { e.preventDefault(); avisar('El número de WhatsApp aún no está configurado.'); });
+}
+
+// ---------- Utilidades ----------
+function avisar(texto){
+  const m = document.getElementById('mensaje');
+  m.textContent = texto; m.classList.add('visible');
+  clearTimeout(avisar.t); avisar.t = setTimeout(() => m.classList.remove('visible'), 2200);
+}
+document.getElementById('anio').textContent = new Date().getFullYear();
+pintarCarrito();
+</script>
+</body>
+</html>
